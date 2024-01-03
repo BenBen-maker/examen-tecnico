@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="bootstrap 4.6v/bootstrap-4.6.2/css/bootstrap.min.css">
+
+    <title>Sistema Gestion de Alumnos y Materias</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <ul class="nav nav-tabs" id="myTabs">
+        <li class="nav-item">
+            <a class="nav-link active" id="alumnos-tab" data-toggle="tab" href="#alumnos">Agregar Alumno</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="materias-tab" data-toggle="tab" href="#materias">Agregar Materias</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-2">
+        <!-- Pestaña para agregar alumno -->
+        <div class="tab-pane fade show active" id="alumnos">
+            <!-- Formulario para agregar alumnos -->
+    <!-- Formulario para agregar alumnos y materias -->
+    <form id="formAgregarAlumno">
+        <h2 class="mb-4">Agregar Alumno</h2>
+    
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+    
+        <div class="form-group2" id="formMaterias">
+            <!-- Checkbox dinámicos se agregarán aquí -->
+        </div>
+    
+        <button type="submit" class="btn btn-primary" id="btnAgregarEditar">Agregar Alumno</button>
+        <button id="btnCancelar" style="display: none">Cancelar</button>
+    </form>
+        
+
+    <!-- Modal para editar alumno -->
+    <div class="modal fade" id="modalEditarAlumno" tabindex="-1" role="dialog" aria-labelledby="modalEditarAlumnoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEditarAlumnoLabel">Editar Alumno</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulario para editar alumno -->
+                    <form id="formEditarAlumno">
+                        <div class="form-group">
+                            <label for="nombreEditar"><h3>Edita Nombre de Alumno </h3></label>
+                            <input type="text" class="form-control" id="nombreEditar">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Actualizar Alumno</button>
+                        <div> 
+                            <h3 style="
+                            margin-top: 10px;
+                        ">Elimina Materias del Alumno</h3>
+                            <div id="materiasContainerModal" style="margin: 0 0 20px 0;"></div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <!-- Modal para mostrar el mensaje -->
+            <div class="modal fade" id="mensajeModal" tabindex="-1" role="dialog" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mensajeModalLabel">Mensaje de Registro</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="mensajeRegistro"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Área para mostrar los alumnos -->
+             <div id="alumnos-list" class="mt-4">
+                 <!-- Lista de alumnos se agregará aquí dinámicamente -->
+             </div>
+        </div>
+
+        <!-- Pestaña para agregar materias -->
+        <div class="tab-pane fade" id="materias">
+            <form id="formularioMaterias">
+                <h2 class="mb-4">Agregar Materias</h2>
+        
+                <div class="form-group">
+                    <label for="materia">Materia:</label>
+                    <input type="text" class="form-control" id="materia" name="materia" required>
+                </div>
+        
+                <button type="submit" class="btn btn-primary">Agregar Materia</button>
+            </form>
+                <!-- Área para mostrar las materias -->
+                <div id="materias-list-tab" class="mt-4">
+                    <!-- Lista de materias se agregará aquí dinámicamente -->
+                </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para mostrar mensajes -->
+<div class="modal fade" id="mensajeModalMateria" tabindex="-1" role="dialog" aria-labelledby="mensajeModalMateriaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mensajeModalMateriaLabel">Mensaje del Sistema</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="mensajeModalMateriaTexto"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para editar materia -->
+<div class="modal fade" id="modalEditarMateria" tabindex="-1" role="dialog" aria-labelledby="modalEditarMateriaLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarMateriaLabel">Editar Materia</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario para editar materia -->
+                <form id="formEditarMateria">
+                    <div class="form-group">
+                        <label for="nombreEditarMateria">Nuevo Nombre de la Materia:</label>
+                        <input type="text" class="form-control" id="nombreEditarMateria">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar Materia</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Variables globales para almacenar el nombre y el ID seleccionados
+   
+    cargarListaMaterias();
+    cargarListaMaterias2();
+   
+    // Cargar lista de alumnos al inicio aqui abajo iva      cargarListaAlumnos();
+
+
+    // Agregar evento al formulario de agregar alumno
+    document.getElementById('formAgregarAlumno').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const materias = Array.from(document.querySelectorAll('input[name="materias[]"]:checked')).map(checkbox => checkbox.value);
+
+    const nuevoAlumno = {
+        nombre: nombre,
+        materias: materias
+    };
+
+    fetch('http://localhost:9000/api/alumnos', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevoAlumno),
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Resto del código...
+        cargarListaAlumnos(); 
+        // Reiniciar el formulario
+        this.reset();
+    })
+    .catch(error => {
+        // Resto del código...
+    });
+
+});
+
+    // Agregar evento al formulario de edición
+    document.getElementById('formEditarAlumno').addEventListener('submit', function (event) {
+        event.preventDefault();
+      
+        const nombreEditar = document.getElementById('nombreEditar').value;
+
+        if (nombreEditar && idSeleccionado) {
+    
+            // Lógica para actualizar el alumno en la base de datos
+            actualizarAlumno(idSeleccionado, nombreEditar)
+                .then(() => {
+                    // Cerrar el modal
+                    $('#modalEditarAlumno').modal('hide');
+                    // Recargar la lista de alumnos
+                    cargarListaAlumnos();
+                })
+                .catch((error) => {
+                    console.error('Error al actualizar el alumno:', error);
+                });
+        } else 
+        {
+            console.error('El nombre no puede estar vacío o no se ha seleccionado un alumno.');
+        }
+    });
+
+    // Agregar evento al modal que se dispara cuando se cierra
+    $('#mensajeModal').on('hidden.bs.modal', function () {
+        cargarListaAlumnos();
+    });
+ // Recargar la lista de alumnos al cargar la página
+
+    // Recargar la lista de alumnos al cargar la página
+    cargarListaAlumnos();
+  
+});
+
+let nombreSeleccionado = "";
+    let idSeleccionado = "";
+
+
+// Función para cargar la lista de alumnos
+function cargarListaAlumnos() {
+    fetch('http://localhost:9000/api/alumnos')
+        .then(response => response.json())
+        .then(data => {
+            const listaAlumnos = document.getElementById('alumnos-list');
+            listaAlumnos.innerHTML = '';
+
+            data.forEach(alumno => mostrarAlumno(alumno));
+        })
+        .catch(error => {
+            console.error('Error al obtener la lista de alumnos:', error);
+        });
+}
+
+// Función para mostrar un alumno en la lista
+async function mostrarAlumno(alumno) {
+    const listaAlumnos = document.getElementById('alumnos-list');
+    // Crear un contenedor div para cada alumno
+    const contenedorAlumno = document.createElement('div');
+    contenedorAlumno.className = 'mb-3'; // Agregar un margen inferior
+
+    // Crear un elemento de párrafo para mostrar el nombre y las materias
+    const nuevoAlumnoElement = document.createElement('p');
+
+    try {
+        // Verificar si hay materias antes de realizar la consulta
+        if (alumno.materias && alumno.materias.length > 0) {
+            // Hacemos una consulta para obtener los detalles de las materias del alumno
+            const materiasDetalles = await Promise.all(alumno.materias.map(async materiaId => {
+                try {
+                    const materia = await obtenerMateriaPorId(materiaId);
+                
+                    return materia ? materia.nombre : null; // Si la materia no existe, retornar null
+                } catch (error) {
+                    console.error(`Error al obtener detalles de la materia con ID ${materiaId}:`, error);
+                    return null;
+                }
+            }));
+
+            // Filtrar las materias que no se pudieron obtener (son null)
+            const materiasFiltradas = materiasDetalles.filter(materia => materia !== null);
+         
+
+            const materiasString = materiasFiltradas.join(', ') || 'N/A';
+            nuevoAlumnoElement.innerHTML = `<strong>Alumno:</strong> ${alumno.nombre} -- <strong>Materias:</strong> ${materiasString}`;
+        } else {
+            nuevoAlumnoElement.innerHTML = `<strong>Alumno:</strong> ${alumno.nombre} -- <strong>Materias:</strong> N/A (Sin materias)`;
+        }
+    } catch (error) {
+        console.error(`Error al obtener detalles de las materias del alumno ${alumno.nombre}:`, error);
+        nuevoAlumnoElement.innerHTML = `<strong>Alumno:</strong> ${alumno.nombre} -- <strong>Materias:</strong> N/A (Error al cargar detalles)`;
+    }
+
+    // Agregar el elemento de párrafo al contenedor del alumno
+    contenedorAlumno.appendChild(nuevoAlumnoElement);
+
+    // Crear un contenedor div para los botones y aplicar clases de Bootstrap para alinear en línea
+    const contenedorBotones = document.createElement('div');
+    contenedorBotones.className = 'd-flex';
+
+    // Crear el botón de editar
+    const editarButton = document.createElement('button');
+    editarButton.textContent = 'Editar';
+    editarButton.className = 'btn btn-primary mr-2'; // Utilizar la clase 'mr-2' para agregar un margen derecho
+
+    // Agregar evento al botón de "Editar"
+    editarButton.addEventListener('click', function () {
+        abrirModalEditar(alumno.nombre, alumno._id);
+        console.log(alumno.materias);
+        console.log(alumno.nombre, alumno._id);
+
+
+  
+    });
+   // Agregar evento al botón de "Editar"
+editarButton.addEventListener('click', async function () {
+  abrirModalEditar(alumno.nombre, alumno._id);
+
+  // Obtener el contenedor de materias en el modal
+  const materiasContainer = document.getElementById('materiasContainerModal');
+
+  // Limpiar el contenedor antes de agregar las materias
+  materiasContainer.innerHTML = '';
+
+  try {
+    // Obtener todas las materias
+    const response = await fetch('http://localhost:9000/api/materias');
+    const todasLasMaterias = await response.json();
+
+    if (response.ok) {
+      todasLasMaterias.forEach(materia => {
+        // Crear un contenedor para la materia
+        const materiaElement = document.createElement('div');
+        materiaElement.className = 'materia-container d-flex align-items-center mb-2';
+
+        // Mostrar el nombre de la materia
+        const nombreMateriaElement = document.createElement('div');
+        nombreMateriaElement.textContent = `Materia: ${materia.nombre}`;
+        materiaElement.appendChild(nombreMateriaElement);
+
+        // Verificar si el alumno tiene la materia
+        const tieneMateria = alumno.materias.includes(materia._id);
+
+        // Crear el botón correspondiente
+        const boton = document.createElement('button');
+        if (tieneMateria) {
+          // Crear el botón de eliminar
+          boton.textContent = 'Eliminar';
+          boton.className = 'btn btn-danger ml-auto'; // Utilizamos 'ml-auto' para mover el botón a la derecha
+          boton.addEventListener('click', async function () {
+            // Agregar lógica para eliminar la materia
+            try {
+              await eliminarMateriaDeAlumno(alumno._id, materia._id);
+         
+            } catch (error) {
+              console.error('Error al eliminar la materia:', error);
+            }
+          });
+        } else {
+          // Crear el botón de agregar
+          boton.textContent = 'Agregar';
+          boton.className = 'btn btn-success ml-auto';
+          boton.addEventListener('click', async function () {
+            // Agregar lógica para agregar la materia al alumno
+            try {
+              await agregarMateriaAAlumno(alumno._id, materia._id);
+              // Recargar la lista de materias en el modal
+              editarButton.click();
+            } catch (error) {
+              console.error('Error al agregar la materia al alumno:', error);
+            }
+          });
+        }
+
+        // Agregar el botón al contenedor de la materia
+        materiaElement.appendChild(boton);
+
+        // Agregar el contenedor de la materia al contenedor principal
+        materiasContainer.appendChild(materiaElement);
+      });
+    } else {
+      console.error('Error al obtener todas las materias');
+    }
+  } catch (error) {
+    console.error('Error al obtener las materias del alumno:', error);
+  }
+});
+async function agregarMateriaAAlumno(alumnoId, materiaId) {
+  try {
+    const response = await fetch(`http://localhost:9000/api/alumnos/${alumnoId}/agregar-materia/${materiaId}`, {
+      method: 'PUT', // O el método correcto que tu servidor espera para agregar una materia a un alumno
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error al agregar materia al alumno: ${response.status} - ${response.statusText}`);
+    }
+
+    // Puedes devolver datos adicionales si es necesario
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error al agregar materia al alumno:', error);
+    throw error;
+  }
+}
+    // Crear el botón de dar de baja
+    const darDeBajaButton = document.createElement('button');
+    darDeBajaButton.textContent = 'Dar de Baja';
+    darDeBajaButton.className = 'btn btn-danger';
+
+    // Agregar evento al botón de "Dar de Baja"
+    darDeBajaButton.addEventListener('click', function () {
+        darDeBajaAlumno(alumno._id);
+    });
+
+    // Agregar los botones al contenedor de botones
+    contenedorBotones.appendChild(editarButton);
+    contenedorBotones.appendChild(darDeBajaButton);
+
+    // Agregar el contenedor de botones al contenedor del alumno
+    contenedorAlumno.appendChild(contenedorBotones);
+
+    // Agregar el contenedor del alumno a la lista de alumnos
+    listaAlumnos.appendChild(contenedorAlumno);
+
+}
+
+async function obtenerMateriaPorId(materiaId) {
+    // Verificar si el ID de la materia es válido antes de realizar la petición
+    if (!materiaId || typeof materiaId !== 'string') {
+        console.error('ID de materia no válido:', materiaId);
+        return null;
+    }
+
+    const url = `http://localhost:9000/api/materias/${materiaId}`;
+
+    try {
+        const response = await fetch(url);
+
+        // Verificar si la materia no existe (código 404)
+        if (response.status === 404) {
+            
+            console.warn(`La materia con ID ${materiaId} no existe.`);
+        
+
+            return null;
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener la materia por ID ${materiaId}`);
+        }
+
+        return data;
+    } catch (error) {
+        // Manejar el error al obtener la materia
+        console.error(`Error al obtener la materia por ID ${materiaId}:`, error);
+        return null;
+    }
+    
+}
+function darDeBajaAlumno(alumnoId) {
+    if (confirm('¿Estás seguro de que deseas dar de baja a este alumno?')) {
+        fetch(`http://localhost:9000/api/alumnos/${alumnoId}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                cargarListaAlumnos();
+            } else {
+                alert('Error al dar de baja al alumno');
+            }
+        })
+        .catch(error => {
+            console.error('Error al enviar datos al servidor:', error);
+        });
+    }
+}
+// Función para abrir el modal de edición
+function abrirModalEditar(nombreAlumno, idAlumno) {
+    // Poner el nombre del alumno en el input del modal
+    document.getElementById('nombreEditar').value = nombreAlumno;
+
+    // Actualizar las variables globales
+    nombreSeleccionado = nombreAlumno;
+    idSeleccionado = idAlumno;
+
+    // Mostrar el modal
+    $('#modalEditarAlumno').modal('show');
+}
+
+// Función para eliminar una materia de la lista de materias de un alumno
+function eliminarMateriaDeAlumno(alumnoId, materiaId) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta materia del alumno?')) {
+        fetch(`http://localhost:9000/api/alumnos/${alumnoId}/quitar-materia/${materiaId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                // Actualizar las materias en el modal
+                abrirModalEditar(nombreSeleccionado, idSeleccionado);
+            } else {
+                alert('Error al eliminar la materia del alumno');
+            }
+        })
+        .catch(error => {
+            console.error('Error al enviar datos al servidor:', error);
+        });
+    }
+}
+
+// Función para obtener el ID del alumno por nombre
+function obtenerIdAlumnoPorNombre(alumno) {
+    return fetch(`http://localhost:9000/api/alumnos/buscar?nombre=${alumno}`)
+        .then(response => {
+            if (response.status === 404) {
+                console.log('Alumno no encontrado');
+                return null;
+            }
+
+            if (!response.ok) {
+                throw new Error(`Error al buscar el alumno: ${response.status} ${response.statusText}`);
+            }
+
+            return response.json();
+        })
+        .then(data => {
+            if (data) {
+                console.log('Datos recibidos:', data);
+                return data._id;
+            }
+
+            console.log('No se encontró un alumno con el nombre especificado.');
+            return null;
+        })
+        .catch(error => {
+            console.error('Error al obtener el ID del alumno por nombre:', error);
+            throw error;
+        });
+}
+
+
+function editarAlumno() {
+    const nombreEditar = document.getElementById('nombreEditar').value;
+
+    if (nombreEditar && idSeleccionado) {
+        // Lógica para actualizar el alumno en la base de datos
+        actualizarAlumno(idSeleccionado, nombreEditar)
+            .then(() => {
+                console.log('Alumno actualizado con nuevo nombre:', nombreEditar);
+                // Cerrar el modal
+                $('#modalEditarAlumno').modal('hide');
+                // Recargar la lista de alumnos
+                cargarListaAlumnos();
+            })
+            .catch((error) => {
+                console.error('Error al actualizar el alumno:', error);
+            });
+    } else {
+        console.error('El nombre no puede estar vacío o no se ha seleccionado un alumno.');
+    }
+}
+// Función para actualizar el alumno por ID
+function actualizarAlumno(alumnoId, nuevoNombre) {
+    const url = `http://localhost:9000/api/alumnos/${alumnoId}`;
+    
+    const body = JSON.stringify({ nombre: nuevoNombre});
+    console.log(body);
+    return fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: body,
+    })
+    .then(response => response.json())
+    .catch(error => {
+        console.error('Error al actualizar el alumno en el servidor:', error);
+        throw error;
+    });
+
+}
+////////////////// MATERIAS
+// Función para mostrar un mensaje en la página
+
+function mostrarMensaje(mensaje, esError = false) {
+   
+    const mensajeElement = document.createElement('div');
+    mensajeElement.className = `alert ${esError ? 'alert-danger' : 'alert-success'}`;
+    mensajeElement.textContent = mensaje;
+
+    // Agregar el mensaje en la parte superior de la página
+    document.body.prepend(mensajeElement);
+
+    // Desaparecer el mensaje después de 3 segundos
+    setTimeout(() => {
+        mensajeElement.remove();
+    }, 3000);
+}
+document.getElementById('formularioMaterias').addEventListener('submit', function (event) {
+    event.preventDefault();
+   
+    const nombreMateria = document.getElementById('materia').value.trim();
+
+
+    // Verificar si la materia ya existe en la lista actual
+    if (materiasExistentes.includes(nombreMateria)) {
+        mostrarMensaje('Error: La materia ya existe', true);
+        return; // No hacer nada más si la materia ya existe
+    }
+
+    const nuevaMateria = {
+        nombre: nombreMateria,
+    };
+
+    fetch('http://localhost:9000/api/materias/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevaMateria),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            mostrarMensaje('Error al agregar la materia nombre repetido', true);
+            document.getElementById('formularioMaterias').reset();
+        } else {
+            // Actualizar la lista de materias existentes
+            materiasExistentes.push(nombreMateria);
+
+            mostrarMensaje('Materia agregada con éxito');
+            document.getElementById('formularioMaterias').reset();
+            mostrarMateria(data);
+           
+        }
+    })
+    .catch(error => {
+        console.error('Error al enviar datos al servidor:', error);
+        mostrarMensaje('Error al comunicarse con el servidor', true);
+    });
+  
+});
+async function limpiarMateriasInvalidas(alumno) {
+    const materiasValidas = [];
+
+    // Filtrar las materias del alumno
+    for (const materiaId of alumno.materias) {
+        const materia = await obtenerMateriaPorId(materiaId);
+
+        if (materia) {
+            materiasValidas.push(materia);
+        } else {
+            console.warn(`La materia con ID ${materiaId} no existe. Se eliminará del array.`);
+            
+            // Agrega lógica para borrar la materia en la base de datos
+            await borrarMateriaInvalida(materiaId);
+        }
+    }
+
+    // Actualizar el array de materias del alumno solo si hay cambios
+    if (materiasValidas.length !== alumno.materias.length) {
+        // Obtener solo las ID de las materias válidas
+        alumno.materias = materiasValidas.map(materia => materia._id);
+
+        // Actualizar el alumno en la base de datos con las materias válidas
+        await actualizarAlumno(alumno._id, alumno);
+    }
+}
+async function borrarMateriaInvalida(materiaId) {
+    const url = `http://localhost:9000/api/materias/${materiaId}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            console.error(`Error al borrar la materia con ID ${materiaId}:`, response.statusText);
+        } else {
+            console.log(`Materia con ID ${materiaId} borrada exitosamente.`);
+        }
+    } catch (error) {
+        console.error(`Error al borrar la materia con ID ${materiaId}:`, error);
+    }
+}
+// Obtener la lista actual de materias
+let materiasExistentes = [];
+
+function cargarListaMaterias(){
+    fetch('http://localhost:9000/api/materias/')
+        .then(response => response.json())
+        .then(data => {
+            const listaMaterias = document.getElementById('materias-list-tab');
+            listaMaterias.innerHTML = '';
+
+            // Actualizar la lista de materias existentes
+            materiasExistentes = data.map(materia => materia.nombre);
+
+            data.forEach(materia => mostrarMateria(materia));
+        })
+        .catch(error => {
+            console.error('Error al obtener la lista de materias:', error);
+        });
+}
+
+// Función para actualizar la materia por ID
+function actualizarMateria(materiaId, nuevoNombre) {
+    const url = `http://localhost:9000/api/materias/${materiaId}`;
+    const body = JSON.stringify({ nombre: nuevoNombre });
+
+    return fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: body,
+    })
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Error al actualizar la materia en el servidor:', error);
+            throw error;
+        });
+}
+// Función para mostrar una materia en la lista
+function mostrarMateria(materia) {
+    const listaMaterias = document.getElementById('materias-list-tab');
+    const nuevoMateriaElement = document.createElement('li');
+    nuevoMateriaElement.className = 'list-group-item';
+
+    // Agregar el nombre de la materia
+    nuevoMateriaElement.innerHTML = `<strong>Materia:</strong> ${materia.nombre}`;
+
+    // Agregar botón "Editar"
+    const editarButton = document.createElement('button');
+    editarButton.textContent = 'Editar';
+    editarButton.className = 'btn btn-warning ml-2';
+    editarButton.addEventListener('click', function () {
+        abrirModalEditarMateria(materia._id, materia.nombre);
+    });
+
+    // Agregar botón "Eliminar"
+    const eliminarButton = document.createElement('button');
+    eliminarButton.textContent = 'Eliminar';
+    eliminarButton.className = 'btn btn-danger ml-2';
+    eliminarButton.addEventListener('click', function () {
+        eliminarMateria(materia._id);
+  
+
+    });
+
+    // Agregar botones al elemento de la materia
+    nuevoMateriaElement.appendChild(editarButton);
+    nuevoMateriaElement.appendChild(eliminarButton);
+
+    // Agregar el elemento de la materia a la lista de materias
+    listaMaterias.appendChild(nuevoMateriaElement);
+    cargarListaMaterias2();
+   
+}
+
+// Función para eliminar una materia por ID
+
+function eliminarMateria(materiaId) {
+    if (confirm('¿Estás seguro de que deseas eliminar esta materia?')) {
+        fetch(`http://localhost:9000/api/materias/${materiaId}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                // Mensaje de éxito al eliminar
+
+                // Obtener la lista de alumnos que tienen esta materia
+                fetch(`http://localhost:9000/api/alumnos/${materiaId}`)
+                    .then(response => response.json())
+                    .then(alumnos => {
+                        // Actualizar cada alumno para quitar la materia de la lista
+                        alumnos.forEach(alumno => {
+                            quitarMateriaDeAlumno(alumno._id, materiaId);
+                        });
+
+                        // Recargar la lista de alumnos
+                        cargarListaAlumnos();
+                    })
+                    .catch(error => {
+                       
+                        console.error('Error al obtener la lista de alumnos por materia:', error);
+                    });
+
+                // Recargar la lista de materias
+                cargarListaMaterias2();
+                cargarListaMaterias();
+            } else {
+                // Mensaje de error al eliminar
+            }
+        })
+        .catch(error => {
+            console.error('Error al enviar datos al servidor:', error);
+            mostrarMensaje('Error al comunicarse con el servidor', true);
+        });
+    }
+    
+}
+
+// Función para quitar una materia de la lista de materias de un alumno
+function quitarMateriaDeAlumno(alumnoId, materiaId) {
+    fetch(`http://localhost:9000/api/alumnos/${alumnoId}/quitar-materia/${materiaId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Manejar la respuesta del servidor si es necesario
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error al quitar materia de alumno:', error);
+    });
+}
+function cargarListaMaterias() {
+    fetch('http://localhost:9000/api/materias/')
+        .then(response => response.json())
+        .then(data => {
+            const listaMaterias = document.getElementById('materias-list-tab');
+            listaMaterias.innerHTML = '';
+
+            data.forEach(materia => mostrarMateria(materia));
+        })
+        .catch(error => {
+            console.error('Error al obtener la lista de materias:', error);
+        });
+}
+function cargarListaMaterias2() {
+    fetch('http://localhost:9000/api/materias/')
+        .then(response => response.json())
+        .then(data => {
+            const formMaterias = document.getElementById('formAgregarAlumno').querySelector('.form-group2');
+          
+            // Limpiar las materias existentes en el formulario
+            formMaterias.innerHTML = '';
+
+            // Crear checkbox para cada materia
+            data.forEach(materia => {
+                const checkbox = document.createElement('div');
+                checkbox.className = 'form-check';
+
+                checkbox.innerHTML = `
+                    <input type="checkbox" class="form-check-input" id="${materia.nombre}" name="materias[]" value="${materia._id}">
+                    <label class="form-check-label" for="${materia.nombre}">${materia.nombre}</label>
+                `;
+
+                formMaterias.appendChild(checkbox);
+            });
+        })
+        .catch(error => {
+            console.error('Error al obtener la lista de materias:', error);
+        });
+ 
+      
+}
+function abrirModalEditarMateria(idMateria, nombreMateria) {
+    // Poner el nombre de la materia en el input del modal
+    document.getElementById('nombreEditarMateria').value = nombreMateria;
+
+    // Configurar el ID de la materia actual
+    idMateriaActual = idMateria;
+
+    // Mostrar el modal
+    $('#modalEditarMateria').modal('show');
+  
+}
+document.getElementById('formEditarMateria').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const nombreEditarMateria = document.getElementById('nombreEditarMateria').value;
+
+    if (nombreEditarMateria && idMateriaActual) {
+        // Lógica para actualizar la materia en la base de datos
+        actualizarMateria(idMateriaActual, nombreEditarMateria)
+            .then(() => {
+                // Cerrar el modal
+                $('#modalEditarMateria').modal('hide');
+                // Recargar la lista de materias
+                cargarListaMaterias();
+            })
+            .catch((error) => {
+                console.error('Error al actualizar la materia:', error);
+            });
+    } else {
+        console.error('El nombre de la materia no puede estar vacío o no se ha seleccionado una materia.');
+    }
+    cargarListaAlumnos(); 
+});
+
+
+</script>
+
+<!-- jQuery full-->
+<script src="jquery/jquery-3.5.1.js"></script>
+
+<!-- Bootstrap 4.6 -->
+<script src="../popper 1.16.1v/popper.min.js"></script>
+<script src="bootstrap 4.6v/bootstrap-4.6.2/js/bootstrap.min.js"></script>
+</body>
+</html>
